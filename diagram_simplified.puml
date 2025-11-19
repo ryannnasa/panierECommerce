@@ -1,0 +1,91 @@
+@startuml
+title E-commerce
+
+class Product {
+  +id: UUID
+  +name: String
+  +price: Money
+  +stockQty: int
+  +category: Category
+  +isAvailable(): bool
+}
+class Category {
+  +id: UUID
+  +name: String
+}
+class Client {
+  +id: UUID
+  +name: String
+  +email: String
+  +cart: Cart
+}
+class Cart {
+  +id: UUID
+  +items: List«CartItem»
+  +addItem(p: Product, qty: int)
+  +removeItem(p: Product)
+  +getTotal(): Money
+}
+class CartItem {
+  +product: Product
+  +quantity: int
+  +getSubtotal(): Money
+}
+class Order {
+  +id: UUID
+  +client: Client
+  +items: List«OrderItem»
+  +total: Money
+}
+class OrderItem {
+  +productSnapshot: ProductSnapshot
+  +quantity: int
+  +priceAtOrder: Money
+}
+
+interface ICommandCancelable {
+  +execute()
+  +undo()
+}
+
+interface IIsFiltrable {
+  +filterByCategory()
+  +filterByPrice()
+  +filterByName()
+}
+
+class AddToCartCommand {
+  -cart: Cart
+  -product: Product
+  -qty: int
+  +execute()
+  +undo()
+}
+class RemoveFromCartCommand {
+  -cart: Cart
+  -product: Product
+  +execute()
+  +undo()
+}
+class CartInvoker {
+  -history: Stack«ICommandCancelable»
+  +executeCommand(cmd: ICommandCancelable)
+  +undoLast()
+}
+
+ICommandCancelable <|.. AddToCartCommand
+ICommandCancelable <|.. RemoveFromCartCommand
+CartInvoker o-- ICommandCancelable : history
+AddToCartCommand --> Cart
+RemoveFromCartCommand --> Cart
+
+Product "1" -- "*" CartItem
+Cart o-- "*" CartItem
+Client "1" -- "1" Cart
+Order o-- "*" OrderItem
+OrderItem --> Product
+Product *-- Category
+Product --> IIsFiltrable
+CartInvoker --> Cart
+
+@enduml
