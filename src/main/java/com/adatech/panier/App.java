@@ -40,7 +40,6 @@ public class App {
         Cart cart = new Cart(UUID.randomUUID());
         CartInvoker invoker = new CartInvoker();
 
-        // Use commands to manipulate the cart
         invoker.executeCommand(new AddToCartCommand(cart, phone, 2));
         invoker.executeCommand(new AddToCartCommand(cart, book, 1));
 
@@ -55,7 +54,6 @@ public class App {
         int total = cart.getTotal();
         System.out.println("Cart total: " + total + " EUR");
 
-        // Undo last add (removes book)
         System.out.println("\nUndo last command (should remove last added product)...");
         invoker.undoLast();
         System.out.println("Cart contents after undo:");
@@ -66,7 +64,6 @@ public class App {
             System.out.printf(" - %s x%d : %d EUR (subtotal %d EUR)\n", p.getName(), qty, p.getPrice(), subtotal);
         }
 
-        // Remove product (phone) using command and then undo
         System.out.println("\nRemove 'Phone' using command...");
         invoker.executeCommand(new RemoveFromCartCommand(cart, phone));
         System.out.println("Cart contents after removal:");
