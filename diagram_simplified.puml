@@ -49,10 +49,8 @@ interface ICommandCancelable {
   +undo()
 }
 
-interface IIsFiltrable {
-  +filterByCategory()
-  +filterByPrice()
-  +filterByName()
+interface IOrderObserver {
+  +onOrderPlaced(order: Order)
 }
 
 class AddToCartCommand {
@@ -73,12 +71,19 @@ class CartInvoker {
   +executeCommand(cmd: ICommandCancelable)
   +undoLast()
 }
+class WarehouseObserver {
+  -warehouseName: String
+  +onOrderPlaced(order: Order)
+}
 
 ICommandCancelable <|.. AddToCartCommand
 ICommandCancelable <|.. RemoveFromCartCommand
 CartInvoker o-- ICommandCancelable : history
 AddToCartCommand --> Cart
 RemoveFromCartCommand --> Cart
+
+IOrderObserver <|.. WarehouseObserver
+IOrderObserver ..> Order : observes
 
 Product "1" -- "*" CartItem
 Cart o-- "*" CartItem
@@ -87,7 +92,6 @@ Order "*" -- "1" Client
 Order o-- "*" OrderItem
 OrderItem "*" -- "1" Product
 Product "*" -- "1" Category
-IIsFiltrable ..> Product
 Order --> Cart
 
 @enduml

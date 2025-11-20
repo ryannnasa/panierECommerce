@@ -13,7 +13,7 @@ Cette application simule un système de panier d'achat en ligne avec gestion des
 ### Patterns utilisés
 
 - **Command Pattern** : Pour la gestion des opérations sur le panier (ajout/suppression) avec possibilité d'annulation (undo)
-- **Strategy Pattern** : Via l'interface `IIsFiltrable` pour le filtrage des produits
+- **Observer Pattern** : Pour notifier l'entrepôt automatiquement lors de la création d'une commande
 
 ### Structure du projet
 
@@ -28,11 +28,9 @@ src/main/java/com/adatech/panier/
 │   ├── Order.java
 │   └── OrderItem.java
 ├── service/            # Logique métier
-│   ├── ProductService.java
 │   ├── CartService.java
 │   └── OrderService.java
 ├── controller/         # Contrôleurs (non utilisés - préparation future API)
-│   ├── ProductController.java
 │   ├── CartController.java
 │   └── OrderController.java
 ├── command/            # Pattern Command
@@ -40,8 +38,9 @@ src/main/java/com/adatech/panier/
 │   ├── AddToCartCommand.java
 │   ├── RemoveFromCartCommand.java
 │   └── CartInvoker.java
-├── filter/             # Filtrage des produits
-│   └── IIsFiltrable.java
+├── observer/           # Pattern Observer
+│   ├── IOrderObserver.java
+│   └── WarehouseObserver.java
 └── App.java            # Point d'entrée avec démonstration
 ```
 
@@ -51,7 +50,6 @@ src/main/java/com/adatech/panier/
 
 - Création de produits avec catégories
 - Vérification de disponibilité en stock
-- Recherche et filtrage par nom, catégorie ou prix
 
 ### Gestion du panier
 
@@ -64,6 +62,7 @@ src/main/java/com/adatech/panier/
 - Création de commande à partir d'un panier
 - Capture du prix au moment de la commande
 - Validation du panier non vide
+- Notification automatique de l'entrepôt (pattern Observer)
 
 ## Exécution
 
@@ -77,10 +76,10 @@ java -cp bin com.adatech.panier.App
 L'application exécute une démonstration complète des fonctionnalités :
 
 1. Création de catégories et produits
-2. Recherche et filtrage de produits
-3. Ajout/suppression d'articles au panier
+2. Vérification de disponibilité des produits
+3. Ajout/suppression d'articles au panier avec pattern Command
 4. Test des commandes undo
-5. Création de commande
+5. Création de commande avec notification de l'entrepôt (pattern Observer)
 6. Validation des erreurs
 
 ## Dépendances
