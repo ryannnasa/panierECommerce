@@ -4,7 +4,7 @@ title E-commerce
 class Product {
   +id: UUID
   +name: String
-  +price: Money
+  +price: int
   +stockQty: int
   +category: Category
   +isAvailable(): bool
@@ -24,23 +24,24 @@ class Cart {
   +items: List«CartItem»
   +addItem(p: Product, qty: int)
   +removeItem(p: Product)
-  +getTotal(): Money
+  +getTotal(): int
 }
 class CartItem {
   +product: Product
   +quantity: int
-  +getSubtotal(): Money
+  +getSubtotal(): int
 }
 class Order {
   +id: UUID
   +client: Client
+  +cart: Cart
   +items: List«OrderItem»
-  +total: Money
+  +total: int
 }
 class OrderItem {
-  +productSnapshot: ProductSnapshot
+  +product: Product
   +quantity: int
-  +priceAtOrder: Money
+  +priceAtOrder: int
 }
 
 interface ICommandCancelable {
@@ -82,10 +83,11 @@ RemoveFromCartCommand --> Cart
 Product "1" -- "*" CartItem
 Cart o-- "*" CartItem
 Client "1" -- "1" Cart
+Order "*" -- "1" Client
 Order o-- "*" OrderItem
-OrderItem --> Product
-Product *-- Category
-Product --> IIsFiltrable
-CartInvoker --> Cart
+OrderItem "*" -- "1" Product
+Product "*" -- "1" Category
+IIsFiltrable ..> Product
+Order --> Cart
 
 @enduml

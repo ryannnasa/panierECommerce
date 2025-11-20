@@ -7,7 +7,6 @@ public class AddToCartCommand implements ICommandCancelable {
     private Cart cart;
     private Product product;
     private int qty;
-    private int prevQty;
 
     public AddToCartCommand(Cart cart, Product product, int qty) {
         this.cart = cart;

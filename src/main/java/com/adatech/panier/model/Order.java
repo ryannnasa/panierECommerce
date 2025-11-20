@@ -6,12 +6,14 @@ import java.util.UUID;
 public class Order {
     private UUID id;
     private Client client;
+    private Cart cart;
     private List<OrderItem> items;
     private int total;
 
-    public Order(UUID id, Client client, List<OrderItem> items, int total) {
+    public Order(UUID id, Client client, Cart cart, List<OrderItem> items, int total) {
         this.id = id;
         this.client = client;
+        this.cart = cart;
         this.items = items;
         this.total = total;
     }
@@ -22,6 +24,10 @@ public class Order {
 
     public Client getClient() {
         return client;
+    }
+
+    public Cart getCart() {
+        return cart;
     }
 
     public List<OrderItem> getItems() {
